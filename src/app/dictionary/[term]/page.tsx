@@ -11,7 +11,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function TermPage({ params }: { params: { term: string } }) {
+// 在 Next.js 15 中，params 必须被 await
+export default async function TermPage(props: { params: Promise<{ term: string }> }) {
+  const params = await props.params;
   const { term } = params;
   const data = getTermData(term);
 
