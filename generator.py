@@ -4,7 +4,7 @@ import google.generativeai as genai
 
 # 1. 配置 API Key
 # 注意：API Key 必须用引号包起来
-API_KEY = "AIzaSyBU85MHPpTOvOasKh861OqWgEuO9Hk9SCs"
+API_KEY = "your api_key"
 genai.configure(api_key=API_KEY)
 
 # 2. 设置保存路径
@@ -13,16 +13,23 @@ os.makedirs(CONTENT_DIR, exist_ok=True)
 
 # 3. 词条清单 (你可以随时在这里添加更多词条)
 terms_to_generate = [
-    "Liability", 
-    "Arbitration", 
-    "Damages", 
-    "Breach of Contract", 
-    "Non-disclosure Agreement",
-    "Intellectual Property",
-    "Jurisdiction",
-    "Indemnity",
-    "Termination Clause",
-    "Assignment"
+    "Present Estates", 
+    "Fee Simple Absolute", 
+    "Defeasible Fee Simple", 
+    "Future Interests", 
+    "Reversion",
+    "Possibility of Reverter",
+    "Right of Entry/ Power of Termination",
+    "Remainder",
+    "Executory Interests",
+    "Condition         Precedent)"
+    "Condition Subsequent)"
+    "Rule Against Restraints on Alienation)"
+    "Co-tenancies)"
+    "Tenancy for years)"
+    "Periodic Tenancy)"
+    "Tenancy  at Will)"
+    
 ]
 
 # 使用当前最稳定的模型名称
