@@ -1,0 +1,13 @@
+# Exclude design.md workspace
+design.md/
+__pycache__/
+
+# Exclude python virtual environment committed to git
+path/to/venv/
+
+# Exclude IDE and temporary files
+.DS_Store
+.git
+.github
+*.log
+*.patch
