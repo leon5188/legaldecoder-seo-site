@@ -20,6 +20,12 @@ interface SelectedPurchase {
   price: string;
 }
 
+const isIOSPlatform = () => {
+  if (typeof window === 'undefined') return false;
+  const cap = (window as unknown as { Capacitor?: { getPlatform?: () => string; isNativePlatform?: () => boolean } }).Capacitor;
+  return cap?.getPlatform?.() === 'ios' || (cap?.isNativePlatform?.() && /iPad|iPhone|iPod/.test(navigator.userAgent));
+};
+
 export default function PaywallScreen({
   showMatrix,
   setShowMatrix,
@@ -148,24 +154,37 @@ export default function PaywallScreen({
               </ul>
               
               {/* Apple Pay / Google Pay Express row */}
-              <div className="grid grid-cols-2 gap-2 pt-1">
+              {isIOSPlatform() ? (
                 <button
                   type="button"
-                  onClick={() => triggerPaymentSheet('Starter Pack', '$29.00', 'apple')}
-                  className="py-2 bg-black text-white rounded-xl border border-black hover:bg-slate-900 transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
+                  onClick={() => {
+                    setIsSubscribed(true);
+                    setShowPaywallPopup(true);
+                  }}
+                  className="w-full py-2 bg-[#DF5B30] hover:bg-[#c94b22] text-white rounded-xl transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(223,91,48,0.15)] text-[9px] font-black uppercase tracking-wider"
                 >
-                  <span className="text-xs"></span>
-                  <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
+                  <span>Activate Starter (iOS Free Preview)</span>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => triggerPaymentSheet('Starter Pack', '$29.00', 'google')}
-                  className="py-2 bg-white text-slate-900 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
-                >
-                  <span className="text-xs">G</span>
-                  <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
-                </button>
-              </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => triggerPaymentSheet('Starter Pack', '$29.00', 'apple')}
+                    className="py-2 bg-black text-white rounded-xl border border-black hover:bg-slate-900 transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
+                  >
+                    <span className="text-xs"></span>
+                    <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => triggerPaymentSheet('Starter Pack', '$29.00', 'google')}
+                    className="py-2 bg-white text-slate-900 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
+                  >
+                    <span className="text-xs">G</span>
+                    <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Card 3: Professional Pack */}
@@ -195,24 +214,37 @@ export default function PaywallScreen({
               </ul>
               
               {/* Apple Pay / Google Pay Express row */}
-              <div className="grid grid-cols-2 gap-2 pt-1">
+              {isIOSPlatform() ? (
                 <button
                   type="button"
-                  onClick={() => triggerPaymentSheet('Professional Pack', '$59.00', 'apple')}
-                  className="py-2 bg-black text-white rounded-xl border border-black hover:bg-slate-900 transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
+                  onClick={() => {
+                    setIsSubscribed(true);
+                    setShowPaywallPopup(true);
+                  }}
+                  className="w-full py-2 bg-[#DF5B30] hover:bg-[#c94b22] text-white rounded-xl transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(223,91,48,0.15)] text-[9px] font-black uppercase tracking-wider"
                 >
-                  <span className="text-xs"></span>
-                  <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
+                  <span>Activate Pro (iOS Free Preview)</span>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => triggerPaymentSheet('Professional Pack', '$59.00', 'google')}
-                  className="py-2 bg-white text-slate-900 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
-                >
-                  <span className="text-xs">G</span>
-                  <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
-                </button>
-              </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => triggerPaymentSheet('Professional Pack', '$59.00', 'apple')}
+                    className="py-2 bg-black text-white rounded-xl border border-black hover:bg-slate-900 transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
+                  >
+                    <span className="text-xs"></span>
+                    <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => triggerPaymentSheet('Professional Pack', '$59.00', 'google')}
+                    className="py-2 bg-white text-slate-900 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
+                  >
+                    <span className="text-xs">G</span>
+                    <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Card 4: Enterprise Pack */}
@@ -238,24 +270,37 @@ export default function PaywallScreen({
                 <li>✓ 12 months validity</li>
               </ul>
               
-              <div className="grid grid-cols-2 gap-2 pt-1">
+              {isIOSPlatform() ? (
                 <button
                   type="button"
-                  onClick={() => triggerPaymentSheet('Enterprise Pack', '$199.00', 'apple')}
-                  className="py-2 bg-black text-white rounded-xl border border-black hover:bg-slate-900 transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
+                  onClick={() => {
+                    setIsSubscribed(true);
+                    setShowPaywallPopup(true);
+                  }}
+                  className="w-full py-2 bg-[#DF5B30] hover:bg-[#c94b22] text-white rounded-xl transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(223,91,48,0.15)] text-[9px] font-black uppercase tracking-wider"
                 >
-                  <span className="text-xs"></span>
-                  <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
+                  <span>Activate Enterprise (iOS Free Preview)</span>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => triggerPaymentSheet('Enterprise Pack', '$199.00', 'google')}
-                  className="py-2 bg-white text-slate-900 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
-                >
-                  <span className="text-xs">G</span>
-                  <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
-                </button>
-              </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => triggerPaymentSheet('Enterprise Pack', '$199.00', 'apple')}
+                    className="py-2 bg-black text-white rounded-xl border border-black hover:bg-slate-900 transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
+                  >
+                    <span className="text-xs"></span>
+                    <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => triggerPaymentSheet('Enterprise Pack', '$199.00', 'google')}
+                    className="py-2 bg-white text-slate-900 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
+                  >
+                    <span className="text-xs">G</span>
+                    <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
+                  </button>
+                </div>
+              )}
             </div>
 
           </div>
@@ -277,9 +322,15 @@ export default function PaywallScreen({
             <div className="text-[8.5px] text-slate-450 font-mono flex items-center justify-center space-x-1 font-bold">
               <span>🔒 SOC2 Compliant • Bank-Grade Security</span>
             </div>
-            <div className="text-[9px] text-[#DF5B30] font-black uppercase tracking-wider">
-              Secure Checkout · 256-bit Encryption
-            </div>
+            {isIOSPlatform() ? (
+              <div className="text-[9px] text-emerald-600 font-black uppercase tracking-wider">
+                ✓ Free Developer Preview Activated
+              </div>
+            ) : (
+              <div className="text-[9px] text-[#DF5B30] font-black uppercase tracking-wider">
+                Secure Checkout · 256-bit Encryption
+              </div>
+            )}
           </div>
 
         </div>

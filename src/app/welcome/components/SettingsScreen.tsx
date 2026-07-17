@@ -14,6 +14,12 @@ interface SettingsScreenProps {
   docName: string;
 }
 
+const isIOSPlatform = () => {
+  if (typeof window === 'undefined') return false;
+  const cap = (window as unknown as { Capacitor?: { getPlatform?: () => string; isNativePlatform?: () => boolean } }).Capacitor;
+  return cap?.getPlatform?.() === 'ios' || (cap?.isNativePlatform?.() && /iPad|iPhone|iPod/.test(navigator.userAgent));
+};
+
 export default function SettingsScreen({
   isSubscribed,
   setIsSubscribed,
@@ -130,17 +136,21 @@ export default function SettingsScreen({
             <button
               type="button"
               onClick={handleWipeAllCache}
-              className="py-3 bg-[#FFF2EE] hover:bg-[#ffe3db] text-[#DF5B30] border border-[#FFD9CE] font-black rounded-xl text-[9px] uppercase tracking-wider shadow-[0_4px_10px_rgba(223,91,48,0.1)] active:scale-[0.98] transition"
+              className={`py-3 bg-[#FFF2EE] hover:bg-[#ffe3db] text-[#DF5B30] border border-[#FFD9CE] font-black rounded-xl text-[9px] uppercase tracking-wider shadow-[0_4px_10px_rgba(223,91,48,0.1)] active:scale-[0.98] transition ${
+                isIOSPlatform() ? 'col-span-2' : ''
+              }`}
             >
               🗑 Wipe All Cache
             </button>
-            <button
-              type="button"
-              onClick={() => setShowBillingPopup(true)}
-              className="py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-black rounded-xl text-[9px] uppercase tracking-wider shadow-[0_4px_10px_rgba(0,0,0,0.02)] active:scale-[0.98] transition"
-            >
-              💳 Stripe Portal
-            </button>
+            {!isIOSPlatform() && (
+              <button
+                type="button"
+                onClick={() => setShowBillingPopup(true)}
+                className="py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-black rounded-xl text-[9px] uppercase tracking-wider shadow-[0_4px_10px_rgba(0,0,0,0.02)] active:scale-[0.98] transition"
+              >
+                💳 Stripe Portal
+              </button>
+            )}
           </div>
         </div>
 
