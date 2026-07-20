@@ -203,7 +203,7 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
       {/* Footer disclaimer */}
       <div className="text-center mb-1">
         <span className="text-[8px] font-bold text-slate-450 leading-tight block">
-          Locked under TLS 1.3 Bank-Grade Security Sandbox.
+          Locked under TLS 1.3 Bank-Grade Security Protocols.
         </span>
       </div>
 

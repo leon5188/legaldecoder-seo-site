@@ -38,30 +38,35 @@ export default function PaywallScreen({
   isSubscribed
 }: PaywallScreenProps) {
   
-  // Custom Apple Pay / Google Pay states
-  const [showApplePaySheet, setShowApplePaySheet] = useState(false);
-  const [showGooglePaySheet, setShowGooglePaySheet] = useState(false);
+  // Custom In-App Purchase states
+  const [showStoreKitSheet, setShowStoreKitSheet] = useState(false);
   const [selectedPurchase, setSelectedPurchase] = useState<SelectedPurchase | null>(null);
   const [payProcessing, setPayProcessing] = useState(false);
+  const [restoreProcessing, setRestoreProcessing] = useState(false);
+  const [showRestorePopup, setShowRestorePopup] = useState(false);
 
-  const triggerPaymentSheet = (planName: string, price: string, type: 'apple' | 'google') => {
+  const triggerIAPCheckout = (planName: string, price: string) => {
     setSelectedPurchase({ name: planName, price });
-    if (type === 'apple') {
-      setShowApplePaySheet(true);
-    } else {
-      setShowGooglePaySheet(true);
-    }
+    setShowStoreKitSheet(true);
   };
 
   const handlePaymentConfirm = () => {
     setPayProcessing(true);
     setTimeout(() => {
       setPayProcessing(false);
-      setShowApplePaySheet(false);
-      setShowGooglePaySheet(false);
+      setShowStoreKitSheet(false);
       setIsSubscribed(true);
       setShowPaywallPopup(true);
     }, 1800);
+  };
+
+  const handleRestorePurchases = () => {
+    setRestoreProcessing(true);
+    setTimeout(() => {
+      setRestoreProcessing(false);
+      setIsSubscribed(true);
+      setShowRestorePopup(true);
+    }, 1500);
   };
 
   return (
@@ -86,7 +91,11 @@ export default function PaywallScreen({
             <span className="text-[10px] font-mono font-black text-slate-700 tracking-wider uppercase">Pro Access</span>
           </div>
         )}
-        <button type="button" className="text-[10px] font-black text-slate-500 hover:text-slate-950 transition duration-200">
+        <button 
+          type="button" 
+          onClick={handleRestorePurchases}
+          className="text-[10px] font-black text-slate-550 hover:text-[#DF5B30] active:scale-95 transition duration-200"
+        >
           Restore
         </button>
       </div>
@@ -153,38 +162,14 @@ export default function PaywallScreen({
                 <li>✓ 12 months validity</li>
               </ul>
               
-              {/* Apple Pay / Google Pay Express row */}
-              {isIOSPlatform() ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsSubscribed(true);
-                    setShowPaywallPopup(true);
-                  }}
-                  className="w-full py-2 bg-[#DF5B30] hover:bg-[#c94b22] text-white rounded-xl transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(223,91,48,0.15)] text-[9px] font-black uppercase tracking-wider"
-                >
-                  <span>Activate Starter (iOS Free Preview)</span>
-                </button>
-              ) : (
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => triggerPaymentSheet('Starter Pack', '$29.00', 'apple')}
-                    className="py-2 bg-black text-white rounded-xl border border-black hover:bg-slate-900 transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
-                  >
-                    <span className="text-xs"></span>
-                    <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => triggerPaymentSheet('Starter Pack', '$29.00', 'google')}
-                    className="py-2 bg-white text-slate-900 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
-                  >
-                    <span className="text-xs">G</span>
-                    <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
-                  </button>
-                </div>
-              )}
+              {/* App Store In-App Purchase Action */}
+              <button
+                type="button"
+                onClick={() => triggerIAPCheckout('Starter Pack', '$29.00')}
+                className="w-full py-2.5 bg-[#DF5B30] hover:bg-[#c94b22] text-white rounded-xl transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(223,91,48,0.15)] text-[9.5px] font-black uppercase tracking-wider"
+              >
+                <span>Purchase Starter Pack • $29.00</span>
+              </button>
             </div>
 
             {/* Card 3: Professional Pack */}
@@ -213,38 +198,14 @@ export default function PaywallScreen({
                 <li>✓ 12 months validity</li>
               </ul>
               
-              {/* Apple Pay / Google Pay Express row */}
-              {isIOSPlatform() ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsSubscribed(true);
-                    setShowPaywallPopup(true);
-                  }}
-                  className="w-full py-2 bg-[#DF5B30] hover:bg-[#c94b22] text-white rounded-xl transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(223,91,48,0.15)] text-[9px] font-black uppercase tracking-wider"
-                >
-                  <span>Activate Pro (iOS Free Preview)</span>
-                </button>
-              ) : (
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => triggerPaymentSheet('Professional Pack', '$59.00', 'apple')}
-                    className="py-2 bg-black text-white rounded-xl border border-black hover:bg-slate-900 transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
-                  >
-                    <span className="text-xs"></span>
-                    <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => triggerPaymentSheet('Professional Pack', '$59.00', 'google')}
-                    className="py-2 bg-white text-slate-900 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
-                  >
-                    <span className="text-xs">G</span>
-                    <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
-                  </button>
-                </div>
-              )}
+              {/* App Store In-App Purchase Action */}
+              <button
+                type="button"
+                onClick={() => triggerIAPCheckout('Professional Pack', '$59.00')}
+                className="w-full py-2.5 bg-[#DF5B30] hover:bg-[#c94b22] text-white rounded-xl transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(223,91,48,0.15)] text-[9.5px] font-black uppercase tracking-wider"
+              >
+                <span>Purchase Pro Pack • $59.00</span>
+              </button>
             </div>
 
             {/* Card 4: Enterprise Pack */}
@@ -270,37 +231,14 @@ export default function PaywallScreen({
                 <li>✓ 12 months validity</li>
               </ul>
               
-              {isIOSPlatform() ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsSubscribed(true);
-                    setShowPaywallPopup(true);
-                  }}
-                  className="w-full py-2 bg-[#DF5B30] hover:bg-[#c94b22] text-white rounded-xl transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(223,91,48,0.15)] text-[9px] font-black uppercase tracking-wider"
-                >
-                  <span>Activate Enterprise (iOS Free Preview)</span>
-                </button>
-              ) : (
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => triggerPaymentSheet('Enterprise Pack', '$199.00', 'apple')}
-                    className="py-2 bg-black text-white rounded-xl border border-black hover:bg-slate-900 transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
-                  >
-                    <span className="text-xs"></span>
-                    <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => triggerPaymentSheet('Enterprise Pack', '$199.00', 'google')}
-                    className="py-2 bg-white text-slate-900 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
-                  >
-                    <span className="text-xs">G</span>
-                    <span className="text-[9px] font-black uppercase tracking-wider">Pay</span>
-                  </button>
-                </div>
-              )}
+              {/* App Store In-App Purchase Action */}
+              <button
+                type="button"
+                onClick={() => triggerIAPCheckout('Enterprise Pack', '$199.00')}
+                className="w-full py-2.5 bg-[#DF5B30] hover:bg-[#c94b22] text-white rounded-xl transition flex items-center justify-center space-x-1 shadow-[0_4px_10px_rgba(223,91,48,0.15)] text-[9.5px] font-black uppercase tracking-wider"
+              >
+                <span>Purchase Enterprise Pack • $199.00</span>
+              </button>
             </div>
 
           </div>
@@ -317,20 +255,21 @@ export default function PaywallScreen({
             </svg>
           </button>
 
-          {/* Compliance Logos */}
-          <div className="pt-3 border-t border-slate-100 text-center space-y-1.5">
+          {/* Compliance Logos & Required Legal Links */}
+          <div className="pt-3.5 border-t border-slate-150 text-center space-y-2">
             <div className="text-[8.5px] text-slate-450 font-mono flex items-center justify-center space-x-1 font-bold">
               <span>🔒 SOC2 Compliant • Bank-Grade Security</span>
             </div>
-            {isIOSPlatform() ? (
-              <div className="text-[9px] text-emerald-600 font-black uppercase tracking-wider">
-                ✓ Free Developer Preview Activated
+            
+            {/* App Store Connect IAP Requirement: Legal Disclaimers & EULA / Privacy links */}
+            <div className="text-[8px] text-slate-400 font-bold leading-normal px-2">
+              Payments will be charged to your App Store Account at confirmation of purchase. Purchases do not auto-renew.
+              <div className="flex justify-center space-x-2.5 mt-1 text-[#DF5B30] font-black uppercase tracking-wide">
+                <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" className="hover:underline">Terms of Use (EULA)</a>
+                <span>•</span>
+                <a href="https://legaldecoder-seo-site.vercel.app/privacy" target="_blank" rel="noopener noreferrer" className="hover:underline">Privacy Policy</a>
               </div>
-            ) : (
-              <div className="text-[9px] text-[#DF5B30] font-black uppercase tracking-wider">
-                Secure Checkout · 256-bit Encryption
-              </div>
-            )}
+            </div>
           </div>
 
         </div>
@@ -400,141 +339,138 @@ export default function PaywallScreen({
 
       </div>
 
-      {/*  Pay Mockup Overlay (Stripe Mobile SDK high fidelity mockup) */}
-      {showApplePaySheet && selectedPurchase && (
+      {/* App Store StoreKit 2 Mockup Overlay */}
+      {showStoreKitSheet && selectedPurchase && (
         <div className="absolute inset-0 bg-slate-950/60 z-50 flex flex-col justify-end">
-          <div className="bg-[#121212] text-white border-t-4 border-slate-855 rounded-t-3xl p-5 space-y-4 animate-in slide-in-from-bottom duration-250">
+          <div className="bg-[#1C1C1E] text-white border-t border-slate-800 rounded-t-3xl p-5 space-y-4 animate-in slide-in-from-bottom duration-250 max-w-md mx-auto w-full">
             
+            {/* Modal Handle */}
+            <div className="w-9 h-1 bg-slate-700 rounded-full mx-auto mb-1.5" />
+
             {/* Modal Head */}
             <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-              <span className="text-sm font-black text-white"> Pay</span>
+              <div className="flex items-center space-x-1.5">
+                <span className="text-blue-500 text-lg"></span>
+                <span className="text-xs font-black tracking-wider text-slate-355 uppercase font-sans">App Store</span>
+              </div>
               <button 
                 type="button" 
-                onClick={() => setShowApplePaySheet(false)}
-                className="text-xs text-slate-400 font-bold hover:text-white"
+                onClick={() => setShowStoreKitSheet(false)}
+                className="text-xs text-blue-500 font-bold hover:text-blue-400"
               >
                 Cancel
               </button>
             </div>
 
-            {/* Merchant Details */}
-            <div className="space-y-3.5 text-left text-xs font-bold">
-              <div className="flex justify-between text-slate-450">
-                <span>MERCHANT</span>
-                <span className="text-white">LEGALDECODER INC.</span>
+            {/* Application Info */}
+            <div className="flex items-center space-x-3.5 py-1">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-[#DF5B30] to-[#FF8C66] flex items-center justify-center text-xl text-white shadow-md">
+                🛡️
               </div>
-              <div className="flex justify-between text-slate-455">
-                <span>PLAN</span>
-                <span className="text-white uppercase">{selectedPurchase.name}</span>
-              </div>
-              <div className="flex justify-between text-slate-455">
-                <span>CARD</span>
-                <span className="text-white flex items-center space-x-1">
-                  <span>💳</span>
-                  <span>Apple Card (•••• 1234)</span>
-                </span>
-              </div>
-              <div className="flex justify-between text-slate-455 border-t border-slate-850 pt-3">
-                <span>TOTAL</span>
-                <span className="text-white text-base font-black font-mono">{selectedPurchase.price}</span>
+              <div className="text-left">
+                <h3 className="text-xs font-black text-white uppercase tracking-tight">LegalDecoder Pro Access</h3>
+                <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">LegalDecoder Inc. • In-App Purchase</p>
               </div>
             </div>
 
-            {/* Apple Touch ID / Face ID Simulator */}
-            <div className="py-4 flex flex-col items-center justify-center space-y-2 border-t border-slate-850">
+            {/* Purchase Details */}
+            <div className="space-y-3 text-left text-xs font-bold border-t border-b border-slate-800 py-3.5">
+              <div className="flex justify-between text-slate-400">
+                <span>ACCOUNT</span>
+                <span className="text-white font-mono truncate max-w-[150px]">sarah.j***@icloud.com</span>
+              </div>
+              <div className="flex justify-between text-slate-400">
+                <span>ITEM</span>
+                <span className="text-white uppercase">{selectedPurchase.name}</span>
+              </div>
+              <div className="flex justify-between text-slate-400">
+                <span>PRICE</span>
+                <span className="text-white font-mono text-sm font-black">{selectedPurchase.price}</span>
+              </div>
+            </div>
+
+            {/* Purchase Authentication Trigger */}
+            <div className="py-4 flex flex-col items-center justify-center space-y-3">
               {payProcessing ? (
                 <div className="flex flex-col items-center space-y-2">
-                  <svg className="animate-spin h-7 w-7 text-white" fill="none" viewBox="0 0 24 24">
+                  <svg className="animate-spin h-7 w-7 text-blue-500" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
                   <span className="text-[9px] font-mono tracking-widest text-slate-400 uppercase animate-pulse">
-                    Processing Payment...
+                    Connecting to App Store...
                   </span>
                 </div>
               ) : (
                 <button
                   type="button"
                   onClick={handlePaymentConfirm}
-                  className="flex flex-col items-center space-y-1.5 group active:scale-95 transition"
+                  className="flex flex-col items-center space-y-2 group active:scale-95 transition focus:outline-none"
                 >
-                  <div className="w-12 h-12 rounded-full border border-white flex items-center justify-center bg-slate-900 text-2xl animate-pulse">
-                    👤
+                  <div className="w-14 h-14 rounded-full border border-blue-500/40 flex items-center justify-center bg-slate-900 text-blue-500 relative group-hover:border-blue-500 transition">
+                    <div className="absolute inset-1.5 border border-dashed border-blue-500 rounded-full animate-[spin_12s_linear_infinite]" />
+                    <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 9h.01M9 9h.01M7 12a5 5 0 0010 0M4 6h16M4 18h16" />
+                    </svg>
                   </div>
-                  <span className="text-[9.5px] text-slate-300 font-black uppercase tracking-wider">
-                    Double Click to Pay
-                  </span>
+                  <div className="text-center space-y-0.5">
+                    <span className="text-[9.5px] text-blue-500 font-black uppercase tracking-wider block">
+                      Double Click Side Button
+                    </span>
+                    <span className="text-[8px] text-slate-400 font-bold uppercase block">
+                      or Tap Face ID to Confirm
+                    </span>
+                  </div>
                 </button>
               )}
+            </div>
+
+            {/* App Store Connect legal agreement reference */}
+            <div className="text-[7.5px] text-slate-505 font-bold text-center leading-normal px-2">
+              Confirming purchase agrees to App Store <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" className="underline hover:text-slate-400">Terms of Use (EULA)</a>. Manage subscriptions in Account Settings.
             </div>
 
           </div>
         </div>
       )}
 
-      {/* Google Pay Mockup Overlay */}
-      {showGooglePaySheet && selectedPurchase && (
-        <div className="absolute inset-0 bg-slate-950/60 z-50 flex flex-col justify-end">
-          <div className="bg-white text-slate-900 rounded-t-3xl p-5 space-y-4 animate-in slide-in-from-bottom duration-250 border-t-4 border-slate-200">
-            
-            {/* Modal Head */}
-            <div className="flex justify-between items-center pb-2 border-b border-slate-100">
-              <span className="text-sm font-black text-slate-900">G Pay</span>
-              <button 
-                type="button" 
-                onClick={() => setShowGooglePaySheet(false)}
-                className="text-xs text-slate-400 font-bold hover:text-slate-700"
-              >
-                Cancel
-              </button>
-            </div>
+      {/* Restore Purchases Processing Loader Overlay */}
+      {restoreProcessing && (
+        <div className="absolute inset-0 bg-[#FAF8F5]/90 z-50 flex items-center justify-center p-4">
+          <div className="flex flex-col items-center space-y-3 text-center">
+            <svg className="animate-spin h-8 w-8 text-[#DF5B30]" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            </svg>
+            <span className="text-[10px] font-mono tracking-widest text-[#DF5B30] font-black uppercase animate-pulse">
+              Restoring App Store purchases...
+            </span>
+          </div>
+        </div>
+      )}
 
-            {/* Merchant Details */}
-            <div className="space-y-3 text-left text-xs font-bold">
-              <div className="flex justify-between text-slate-500">
-                <span>MERCHANT</span>
-                <span className="text-slate-900">LEGALDECODER INC.</span>
-              </div>
-              <div className="flex justify-between text-slate-500">
-                <span>PLAN</span>
-                <span className="text-slate-900 uppercase">{selectedPurchase.name}</span>
-              </div>
-              <div className="flex justify-between text-slate-500">
-                <span>ACCOUNT</span>
-                <span className="text-slate-900 flex items-center space-x-1">
-                  <span>💳</span>
-                  <span>Google Wallet (•••• 5678)</span>
-                </span>
-              </div>
-              <div className="flex justify-between text-slate-505 border-t border-slate-100 pt-3">
-                <span>TOTAL</span>
-                <span className="text-slate-900 text-base font-black font-mono">{selectedPurchase.price}</span>
-              </div>
+      {/* Restore Success Confirmation Overlay */}
+      {showRestorePopup && (
+        <div className="absolute inset-0 bg-[#FAF8F5]/95 backdrop-blur-[1px] z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-150 rounded-3xl p-5 text-center space-y-4 max-w-[260px] shadow-[0_12px_30px_rgba(0,0,0,0.1)] animate-in fade-in zoom-in duration-200">
+            <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mx-auto shadow-[0_4px_10px_rgba(16,185,129,0.1)]">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
             </div>
-
-            {/* Confirm button */}
-            <div className="pt-2 border-t border-slate-100">
-              {payProcessing ? (
-                <div className="flex flex-col items-center space-y-2 py-2">
-                  <svg className="animate-spin h-7 w-7 text-[#DF5B30]" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  <span className="text-[9px] font-mono tracking-widest text-slate-500 uppercase animate-pulse">
-                    Authorizing Google Pay...
-                  </span>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handlePaymentConfirm}
-                  className="w-full py-2.5 bg-[#DF5B30] text-white border border-transparent rounded-xl text-[10px] font-black uppercase tracking-wider shadow-[0_4px_12px_rgba(223,91,48,0.2)]"
-                >
-                  Pay with Google Wallet
-                </button>
-              )}
+            <div className="space-y-1">
+              <h4 className="text-xs font-black text-slate-900 uppercase tracking-wide">✓ Restore Successful</h4>
+              <p className="text-[9.5px] text-slate-550 leading-relaxed font-bold">
+                Your previous purchases from the App Store have been successfully restored. Pro access is now active.
+              </p>
             </div>
-
+            <button
+              type="button"
+              onClick={() => setShowRestorePopup(false)}
+              className="w-full py-2.5 bg-[#DF5B30] text-white border border-transparent rounded-xl text-[10px] font-black transition shadow-[0_4px_12px_rgba(223,91,48,0.2)]"
+            >
+              Dismiss
+            </button>
           </div>
         </div>
       )}

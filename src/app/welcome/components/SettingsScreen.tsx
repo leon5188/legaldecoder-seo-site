@@ -36,7 +36,7 @@ export default function SettingsScreen({
 
   // Mocked localized Security Logs
   const securityLogs = [
-    { time: "07:16:21", event: "SANDBOX", msg: "Encrypted memory buffer initialized." },
+    { time: "07:16:21", event: "SYSTEM", msg: "Encrypted memory buffer initialized." },
     { time: "07:16:32", event: "KEY_ROT", msg: "256-bit TLS local session key rotated." },
     { time: "07:16:45", event: "SHRED", msg: "Local document queue wiped successfully." }
   ];
@@ -122,7 +122,7 @@ export default function SettingsScreen({
             <div className="flex space-x-1.5 items-start text-orange-500">
               <span className="text-slate-500 font-bold">CURRENT</span>
               <span className="px-1 bg-orange-950/60 rounded text-[7.5px] font-black">IDLE</span>
-              <span className="text-slate-450">Listening for sandbox events...</span>
+              <span className="text-slate-455">Listening for core engine operations...</span>
             </div>
           </div>
         </div>

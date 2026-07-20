@@ -37,7 +37,7 @@ export default function UploadScreen({
 
   // Simulated log entries
   const simLogPool = [
-    "Initializing secure sandbox container...",
+    "Initializing secure audit container...",
     "Anonymizing metadata & scrubbing user IDs...",
     "Scanning document layout via OCR scanner...",
     "Extracting semantic nodes & structural clauses...",
@@ -180,7 +180,7 @@ export default function UploadScreen({
             {/* Middle Banners: Security & Privacy */}
             <div className="space-y-2">
               <span className="text-[8px] font-mono font-black text-slate-400 uppercase tracking-widest block text-center">
-                SECURITY SANDBOX STANDARD
+                SECURE DATA STANDARD
               </span>
               <div className="grid grid-cols-3 gap-2 text-[8px] text-slate-700 font-mono text-center font-black">
                 <div className="bg-white border border-slate-150/80 rounded-xl py-1.5 shadow-[0_4px_12px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center">
@@ -230,7 +230,7 @@ export default function UploadScreen({
             {/* Rolling diagnostic logs */}
             <div className="space-y-2 mt-4 flex-1 flex flex-col justify-end">
               <span className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">
-                SANDBOX CONSOLE LOGS
+                ENGINE ANALYSIS PROCESS
               </span>
               <div 
                 ref={logContainerRef}
@@ -252,7 +252,7 @@ export default function UploadScreen({
             {/* Wipe Queue Anchor */}
             <div className="border-t border-orange-950/40 pt-3 text-center">
               <p className="text-[8px] text-slate-500 font-bold uppercase">
-                🛡 Isolated Sandbox Active • File Wipe Queue Auto-Armed
+                🛡 Secure Audit Pipeline Active • Automatic Buffer Purge Armed
               </p>
             </div>
 

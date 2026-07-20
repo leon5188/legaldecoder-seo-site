@@ -47,7 +47,7 @@ export default function WelcomePage() {
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("username", user);
       setIsLoggedIn(true);
-      showToast("✓ Auth Session Established! Secured sandbox ready");
+      showToast("✓ Auth Session Established! Secured analysis engine ready");
     }
   };
 
@@ -107,7 +107,7 @@ export default function WelcomePage() {
               />
             )}
 
-            {/* Simulated Sandbox Toast Alerts */}
+            {/* Simulated System Toast Alerts */}
             <div className={`absolute bottom-4 left-4 right-4 bg-slate-950 border border-slate-800 rounded-xl p-3 shadow-[0_8px_20px_rgba(0,0,0,0.25)] z-50 transition-all duration-300 flex items-start space-x-2.5 ${
               toast ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0 pointer-events-none'
             }`}>
@@ -115,7 +115,7 @@ export default function WelcomePage() {
                 <span>i</span>
               </div>
               <div className="flex-1 text-left">
-                <span className="text-[10px] font-black text-white block uppercase tracking-wider font-mono">SANDBOX ALERT</span>
+                <span className="text-[10px] font-black text-white block uppercase tracking-wider font-mono">SYSTEM ALERT</span>
                 <span className="text-[9px] text-orange-300 block leading-tight mt-0.5 font-bold font-mono">{toast}</span>
               </div>
             </div>
