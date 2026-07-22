@@ -93,18 +93,22 @@ export default function SettingsScreen({
         {/* Section 1: User Profile Header */}
         <div className="flex items-center space-x-3 p-3.5 bg-white border border-slate-150/80 rounded-2xl shadow-[0_8px_25px_rgba(0,0,0,0.04)] text-left">
           <div className="w-10 h-10 rounded-full bg-[#EAE7DF] border border-slate-200 flex items-center justify-center text-slate-900 font-black text-xs tracking-wider shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
-            SJ
+            {(typeof window !== 'undefined' ? localStorage.getItem("username") || "US" : "US").substring(0, 2).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2">
-              <h4 className="text-xs font-black text-slate-900 truncate uppercase">Sarah Jenkins</h4>
+              <h4 className="text-xs font-black text-slate-900 truncate uppercase">
+                {typeof window !== 'undefined' ? localStorage.getItem("username") || "Authorized User" : "Authorized User"}
+              </h4>
               <span className={`text-[8px] font-mono font-black px-1.5 py-0.5 rounded border ${
                 isSubscribed ? 'bg-orange-50 border-[#FFD9CE] text-[#DF5B30]' : 'bg-[#EAE7DF] border-slate-300 text-slate-600'
               }`}>
                 {isSubscribed ? 'PRO MEMBER' : 'FREE ACCOUNT'}
               </span>
             </div>
-            <p className="text-[9px] text-slate-400 mt-0.5 truncate font-bold font-mono">sarah@designstudio.io</p>
+            <p className="text-[9px] text-slate-400 mt-0.5 truncate font-bold font-mono">
+              {typeof window !== 'undefined' ? (localStorage.getItem("username") ? `${localStorage.getItem("username")}@user.app` : "authenticated.user@secured.io") : "authenticated.user@secured.io"}
+            </p>
           </div>
         </div>
 

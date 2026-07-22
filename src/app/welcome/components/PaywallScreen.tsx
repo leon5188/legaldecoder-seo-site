@@ -377,7 +377,9 @@ export default function PaywallScreen({
             <div className="space-y-3 text-left text-xs font-bold border-t border-b border-slate-800 py-3.5">
               <div className="flex justify-between text-slate-400">
                 <span>ACCOUNT</span>
-                <span className="text-white font-mono truncate max-w-[150px]">sarah.j***@icloud.com</span>
+                <span className="text-white font-mono truncate max-w-[150px]">
+                  {typeof window !== 'undefined' ? (localStorage.getItem("username") ? `${localStorage.getItem("username")}@apple.com` : "active.apple.id@icloud.com") : "active.apple.id@icloud.com"}
+                </span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>ITEM</span>

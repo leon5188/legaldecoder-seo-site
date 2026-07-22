@@ -54,7 +54,7 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
     setTimeout(() => {
       setOAuthLoading(false);
       setShowAppleModal(false);
-      const userDisplayName = hideEmail ? "Apple_Privatized_User" : "Sarah_Jenkins_Apple";
+      const userDisplayName = hideEmail ? "Apple User" : "Apple Account User";
       onLoginSuccess(userDisplayName);
     }, 1200);
   };
@@ -141,7 +141,7 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Sarah Jenkins"
+                placeholder="Enter your full name"
                 className="w-full px-3 py-2 bg-[#FAF8F5] border border-slate-200 rounded-xl text-xs font-bold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#DF5B30] focus:ring-1 focus:ring-[#DF5B30] shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)] transition"
               />
             </div>
@@ -155,7 +155,7 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="sarah@designstudio.io"
+              placeholder="user@example.com"
               className="w-full px-3 py-2 bg-[#FAF8F5] border border-slate-200 rounded-xl text-xs font-bold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#DF5B30] focus:ring-1 focus:ring-[#DF5B30] shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)] transition"
             />
           </div>
@@ -260,14 +260,14 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               </div>
               <div>
                 <h4 className="text-xs font-black text-white uppercase">LegalDecoder</h4>
-                <p className="text-[9px] text-slate-400 font-mono font-bold">legaldecoder-app.com</p>
+                <p className="text-[9px] text-slate-400 font-mono font-bold">Apple ID Authorization</p>
               </div>
             </div>
 
             <div className="space-y-2 border-y border-slate-800 py-3 text-xs font-bold">
-              <div className="flex justify-between text-slate-400">
-                <span>NAME</span>
-                <span className="text-white font-mono">Sarah Jenkins</span>
+              <div className="flex justify-between text-slate-400 items-center">
+                <span>ACCOUNT</span>
+                <span className="text-white font-mono text-[10px]">Apple User Account</span>
               </div>
               <div className="flex justify-between text-slate-400 items-center">
                 <span>EMAIL</span>
@@ -277,14 +277,14 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                     onClick={() => setHideEmail(false)}
                     className={`px-2 py-0.5 rounded border ${!hideEmail ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-400'}`}
                   >
-                    Share My Email
+                    Share Email
                   </button>
                   <button 
                     type="button"
                     onClick={() => setHideEmail(true)}
                     className={`px-2 py-0.5 rounded border ${hideEmail ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-400'}`}
                   >
-                    Hide My Email
+                    Hide Email
                   </button>
                 </div>
               </div>
@@ -296,7 +296,7 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               onClick={handleAppleAuthConfirm}
               className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-black uppercase tracking-wider rounded-xl transition flex items-center justify-center space-x-1.5 shadow-[0_4px_12px_rgba(37,99,235,0.3)] active:scale-[0.98]"
             >
-              <span>{oAuthLoading ? "Verifying Face ID..." : "Continue with Touch ID / Face ID"}</span>
+              <span>{oAuthLoading ? "Verifying Face ID..." : "Authenticate with Face ID / Touch ID"}</span>
             </button>
           </div>
         </div>
@@ -323,43 +323,36 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
             </div>
 
             <div className="space-y-1">
-              <h4 className="text-xs font-black text-slate-900 uppercase">Choose an account</h4>
-              <p className="text-[9.5px] text-slate-500 font-bold">to continue to <span className="text-slate-900 font-mono">LegalDecoder</span></p>
+              <h4 className="text-xs font-black text-slate-900 uppercase">Google Sign-In</h4>
+              <p className="text-[9.5px] text-slate-500 font-bold">Select or type your Google Account to authorize</p>
             </div>
 
             <div className="space-y-2 border-y border-slate-100 py-3">
-              <button
-                type="button"
-                onClick={() => handleGoogleAuthSelect("sarah.jenkins@gmail.com")}
-                className="w-full p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl flex items-center space-x-3 transition text-left active:scale-[0.98]"
-              >
-                <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-black text-xs flex items-center justify-center">
-                  SJ
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h5 className="text-xs font-black text-slate-900 truncate">Sarah Jenkins</h5>
-                  <p className="text-[9px] text-slate-500 truncate font-mono">sarah.jenkins@gmail.com</p>
-                </div>
-              </button>
+              <div className="space-y-1">
+                <label className="text-[8px] font-black text-slate-400 uppercase tracking-wider block">Enter Your Google Account Email</label>
+                <input
+                  type="email"
+                  placeholder="your.email@gmail.com"
+                  id="custom-google-email"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                />
+              </div>
 
               <button
                 type="button"
-                onClick={() => handleGoogleAuthSelect("sarah.work@designstudio.io")}
-                className="w-full p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl flex items-center space-x-3 transition text-left active:scale-[0.98]"
+                onClick={() => {
+                  const inputVal = (document.getElementById("custom-google-email") as HTMLInputElement)?.value;
+                  handleGoogleAuthSelect(inputVal && inputVal.includes("@") ? inputVal : "Google_User@gmail.com");
+                }}
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition shadow-[0_4px_12px_rgba(37,99,235,0.2)] active:scale-[0.98]"
               >
-                <div className="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center">
-                  SW
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h5 className="text-xs font-black text-slate-900 truncate">Sarah Work</h5>
-                  <p className="text-[9px] text-slate-500 truncate font-mono">sarah.work@designstudio.io</p>
-                </div>
+                Authorize Google Account
               </button>
             </div>
 
             {oAuthLoading && (
               <div className="text-center text-[10px] font-mono font-bold text-blue-600 uppercase animate-pulse">
-                Authenticating Google OAuth Token...
+                Exchanging OAuth Token...
               </div>
             )}
           </div>
