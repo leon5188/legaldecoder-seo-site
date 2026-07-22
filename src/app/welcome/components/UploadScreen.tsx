@@ -29,35 +29,31 @@ export default function UploadScreen({
   
   // Custom states for loader
   const [isDecoding, setIsDecoding] = useState(false);
-  const [countdown, setCountdown] = useState(45);
-  const [logs, setLogs] = useState<string[]>([]);
+  const [countdown, setCountdown] = useState(15);
+  const [currentStepText, setCurrentStepText] = useState("Initializing Analysis Engine...");
   const [showPasteModal, setShowPasteModal] = useState(false);
   const [pastedText, setPastedText] = useState("");
-  const logContainerRef = useRef<HTMLDivElement>(null);
 
-  // Simulated log entries
-  const simLogPool = [
-    "Initializing secure audit container...",
-    "Anonymizing metadata & scrubbing user IDs...",
-    "Scanning document layout via OCR scanner...",
-    "Extracting semantic nodes & structural clauses...",
-    "Running red-flag liability trap detection...",
-    "Cross-referencing state tenant/NDA guidelines...",
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+
+  const stepMessages = [
+    "Scanning document layout & extracting text...",
+    "Analyzing semantic nodes for liability traps...",
+    "Cross-referencing state legal compliance guidelines...",
     "Scoring termination covenants & fee structures...",
-    "Securing local encryption keys...",
-    "Wiping cloud ingress queues & files...",
-    "Finalizing AI Risk Report & Avvo indices..."
+    "Finalizing AI Risk Report & Summary..."
   ];
 
-  // Loader Countdown Timer
+  // Loader Countdown Timer & Step Updates
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (isDecoding && countdown > 0) {
       timer = setTimeout(() => {
-        setCountdown(prev => Math.max(0, prev - 3)); // Fast countdown for better user demo
-        const nextLogIndex = Math.floor((45 - countdown) / 4);
-        if (simLogPool[nextLogIndex] && !logs.includes(simLogPool[nextLogIndex])) {
-          setLogs(prev => [...prev, `[${45 - countdown}s] ${simLogPool[nextLogIndex]}`]);
+        setCountdown(prev => Math.max(0, prev - 1));
+        const stepIdx = Math.floor(((15 - countdown) / 15) * stepMessages.length);
+        if (stepMessages[stepIdx]) {
+          setCurrentStepText(stepMessages[stepIdx]);
         }
       }, 300);
     } else if (isDecoding && countdown === 0) {
@@ -77,17 +73,18 @@ export default function UploadScreen({
     return () => clearTimeout(timer);
   }, [isDecoding, countdown]);
 
-  useEffect(() => {
-    if (logContainerRef.current) {
-      logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
-    }
-  }, [logs]);
-
-  const startAnalysis = (mockName: string) => {
-    setDocName(mockName);
-    setLogs(["[0s] Ingress buffer loaded successfully."]);
-    setCountdown(45);
+  const startAnalysis = (name: string) => {
+    setDocName(name);
+    setCurrentStepText("Initializing Analysis Engine...");
+    setCountdown(15);
     setIsDecoding(true);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      startAnalysis(files[0].name);
+    }
   };
 
   const handlePasteSubmit = () => {
@@ -132,13 +129,36 @@ export default function UploadScreen({
                 </p>
               </div>
 
+              {/* Hidden Real Inputs */}
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="application/pdf,image/*"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+              <input
+                type="file"
+                ref={cameraInputRef}
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+
               {/* Three upload action routes (Styleguide style elevated buttons) */}
               <div className="space-y-3 pt-2">
                 
                 {/* Route 1: Camera Scan */}
                 <button
                   type="button"
-                  onClick={() => startAnalysis("Camera_Capture_Scan.pdf")}
+                  onClick={() => {
+                    if (cameraInputRef.current) {
+                      cameraInputRef.current.click();
+                    } else {
+                      startAnalysis("Camera_Capture_Scan.pdf");
+                    }
+                  }}
                   className="w-full p-3.5 bg-white hover:bg-slate-50 border border-slate-150/80 rounded-2xl flex items-center space-x-3.5 shadow-[0_8px_25px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.6)] active:scale-[0.99] transition-all"
                 >
                   <span className="text-lg">📷</span>
@@ -151,7 +171,13 @@ export default function UploadScreen({
                 {/* Route 2: Upload File */}
                 <button
                   type="button"
-                  onClick={() => startAnalysis("Lease_Agreement_Draft.pdf")}
+                  onClick={() => {
+                    if (fileInputRef.current) {
+                      fileInputRef.current.click();
+                    } else {
+                      startAnalysis("Lease_Agreement_Draft.pdf");
+                    }
+                  }}
                   className="w-full p-3.5 bg-white hover:bg-slate-50 border border-slate-150/80 rounded-2xl flex items-center space-x-3.5 shadow-[0_8px_25px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.6)] active:scale-[0.99] transition-all"
                 >
                   <span className="text-lg">📁</span>
@@ -210,49 +236,40 @@ export default function UploadScreen({
 
         {/* VIEW 2: ANALYSIS LOADER SCREEN */}
         {isDecoding && (
-          <div className="flex-1 p-4 bg-slate-950 text-orange-400 flex flex-col justify-between h-full font-mono text-left animate-in fade-in duration-200">
+          <div className="flex-1 p-5 bg-slate-950 text-orange-400 flex flex-col justify-between h-full font-mono text-left animate-in fade-in duration-200">
             
             {/* Animated Decoder Radar Box */}
-            <div className="space-y-4">
-              <div className="relative w-20 h-20 mx-auto mt-6 border-2 border-orange-500 rounded-full flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-transparent to-orange-500/20 origin-bottom animate-[spin_2.5s_linear_infinite]" />
-                <span className="text-[10px] text-orange-400 font-black animate-pulse">DECRYPTING</span>
+            <div className="space-y-6 my-auto text-center">
+              <div className="relative w-24 h-24 mx-auto border-2 border-orange-500 rounded-full flex items-center justify-center overflow-hidden shadow-[0_0_30px_rgba(223,91,48,0.2)]">
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent via-orange-500/10 to-orange-500/30 origin-bottom animate-[spin_2s_linear_infinite]" />
+                <span className="text-2xl animate-pulse">🛡️</span>
               </div>
 
-              <div className="text-center space-y-1">
-                <h4 className="text-[11px] text-white uppercase font-bold">Decoding Legal Clauses</h4>
-                <p className="text-[9px] text-orange-300/80">
-                  Estimated time remaining: <span className="text-white font-black">{countdown}s</span>
+              <div className="space-y-2 px-2">
+                <span className="text-[9px] font-mono font-black text-orange-400 bg-orange-950/80 border border-orange-900/80 rounded-full px-3 py-1 uppercase tracking-widest">
+                  Analyzing Document
+                </span>
+                <h4 className="text-xs text-white uppercase font-bold tracking-wide mt-2">
+                  {docName}
+                </h4>
+                <p className="text-[10px] text-orange-300/90 font-bold h-6 flex items-center justify-center">
+                  {currentStepText}
                 </p>
               </div>
-            </div>
 
-            {/* Rolling diagnostic logs */}
-            <div className="space-y-2 mt-4 flex-1 flex flex-col justify-end">
-              <span className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">
-                ENGINE ANALYSIS PROCESS
-              </span>
-              <div 
-                ref={logContainerRef}
-                className="h-28 bg-black border border-orange-900/60 rounded-xl p-2.5 overflow-y-auto no-scrollbar space-y-1.5 text-[8.5px] font-mono leading-relaxed"
-              >
-                {logs.map((log, idx) => (
-                  <div key={idx} className="flex space-x-1">
-                    <span className="text-orange-500 font-black">▶</span>
-                    <span className="text-orange-300/90">{log}</span>
-                  </div>
-                ))}
-                <div className="flex items-center space-x-1">
-                  <span className="text-orange-500 font-black">▶</span>
-                  <span className="w-1.5 h-3 bg-orange-400 animate-ping" />
-                </div>
+              {/* Progress bar */}
+              <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-orange-900/40 max-w-[200px] mx-auto">
+                <div 
+                  className="bg-[#DF5B30] h-full rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(223,91,48,0.8)]"
+                  style={{ width: `${Math.round(((15 - countdown) / 15) * 100)}%` }}
+                />
               </div>
             </div>
 
-            {/* Wipe Queue Anchor */}
+            {/* Bottom Security Note */}
             <div className="border-t border-orange-950/40 pt-3 text-center">
-              <p className="text-[8px] text-slate-500 font-bold uppercase">
-                🛡 Secure Audit Pipeline Active • Automatic Buffer Purge Armed
+              <p className="text-[8px] text-slate-500 font-bold uppercase tracking-wider">
+                🛡 Secure Audit Pipeline Active • Encrypted In-Memory Processing
               </p>
             </div>
 

@@ -33,6 +33,8 @@ export default function SettingsScreen({
   
   const [showBillingPopup, setShowBillingPopup] = useState(false);
   const [showWipeModal, setShowWipeModal] = useState(false);
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Mocked localized Security Logs
   const securityLogs = [
@@ -52,6 +54,25 @@ export default function SettingsScreen({
       // Optional: redirect to home screen
       setActiveScreenIndex(1);
     }, 2500);
+  };
+
+  const handleConfirmDeleteAccount = () => {
+    setIsDeleting(true);
+    setTimeout(() => {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("username");
+      }
+      setHasUploaded(false);
+      setIsSubscribed(false);
+      setDocName("");
+      setIsDeleting(false);
+      setShowDeleteAccountModal(false);
+      // Refresh window to return to Login Screen
+      if (typeof window !== "undefined") {
+        window.location.reload();
+      }
+    }, 1500);
   };
 
   return (
@@ -127,7 +148,7 @@ export default function SettingsScreen({
           </div>
         </div>
 
-        {/* Section 4: Actions (Wipe Cache & Billing) */}
+        {/* Section 4: Actions (Wipe Cache, Delete Account & Billing) */}
         <div className="space-y-2 text-left">
           <span className="text-[8.5px] font-mono font-black text-slate-400 uppercase tracking-widest block">
             DATA CONTROL ACTIONS
@@ -136,17 +157,24 @@ export default function SettingsScreen({
             <button
               type="button"
               onClick={handleWipeAllCache}
-              className={`py-3 bg-[#FFF2EE] hover:bg-[#ffe3db] text-[#DF5B30] border border-[#FFD9CE] font-black rounded-xl text-[9px] uppercase tracking-wider shadow-[0_4px_10px_rgba(223,91,48,0.1)] active:scale-[0.98] transition ${
-                isIOSPlatform() ? 'col-span-2' : ''
-              }`}
+              className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 font-black rounded-xl text-[9px] uppercase tracking-wider active:scale-[0.98] transition"
             >
-              🗑 Wipe All Cache
+              🗑 Wipe Cache
             </button>
+
+            <button
+              type="button"
+              onClick={() => setShowDeleteAccountModal(true)}
+              className="py-3 bg-[#FFF2EE] hover:bg-[#ffe3db] text-[#DF5B30] border border-[#FFD9CE] font-black rounded-xl text-[9px] uppercase tracking-wider shadow-[0_4px_10px_rgba(223,91,48,0.1)] active:scale-[0.98] transition"
+            >
+              ⚠️ Delete Account
+            </button>
+
             {!isIOSPlatform() && (
               <button
                 type="button"
                 onClick={() => setShowBillingPopup(true)}
-                className="py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-black rounded-xl text-[9px] uppercase tracking-wider shadow-[0_4px_10px_rgba(0,0,0,0.02)] active:scale-[0.98] transition"
+                className="col-span-2 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-black rounded-xl text-[9px] uppercase tracking-wider shadow-[0_4px_10px_rgba(0,0,0,0.02)] active:scale-[0.98] transition"
               >
                 💳 Stripe Portal
               </button>
@@ -219,6 +247,42 @@ export default function SettingsScreen({
             </div>
             <div className="w-full py-1 bg-[#FFF2EE] border border-[#FFD9CE] text-[8.5px] font-black uppercase tracking-widest text-[#DF5B30] rounded-lg">
               SYSTEM REBOOTED
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Account Deletion Confirmation Modal (Guideline 5.1.1(v)) */}
+      {showDeleteAccountModal && (
+        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[1px] z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-3xl p-5 text-center space-y-4 max-w-[260px] shadow-[0_12px_30px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in duration-200 text-left">
+            <div className="w-10 h-10 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-red-600 mx-auto">
+              <span className="text-lg">⚠️</span>
+            </div>
+            <div className="space-y-1.5 text-center">
+              <h4 className="text-xs font-black text-slate-900 uppercase tracking-wide">Delete Account?</h4>
+              <p className="text-[9.5px] text-slate-600 leading-relaxed font-bold">
+                Deleting your account will permanently erase your profile, saved document risk reports, and active access. This action cannot be undone.
+              </p>
+            </div>
+            
+            <div className="space-y-2 pt-1">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={handleConfirmDeleteAccount}
+                className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-[10px] font-black uppercase tracking-wider shadow-[0_4px_12px_rgba(220,38,38,0.25)] active:scale-[0.98] transition flex items-center justify-center space-x-1"
+              >
+                <span>{isDeleting ? "Deleting Account..." : "Confirm Delete Account"}</span>
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setShowDeleteAccountModal(false)}
+                className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider transition"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

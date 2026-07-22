@@ -43,8 +43,22 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
     }, 1200);
   };
 
+  const handleThirdPartyAuth = (provider: 'Apple' | 'Google') => {
+    setError(null);
+    setIsSubmitting(true);
+    try {
+      setTimeout(() => {
+        setIsSubmitting(false);
+        onLoginSuccess(`User_${provider}`);
+      }, 1000);
+    } catch (err) {
+      setIsSubmitting(false);
+      setError(`Unable to connect to ${provider} Auth Services. Please try again.`);
+    }
+  };
+
   return (
-    <div className="flex flex-col h-full bg-[#FAF8F5] p-5 justify-between select-none">
+    <div className="flex flex-col h-full bg-[#FAF8F5] p-5 justify-between select-none overflow-y-auto no-scrollbar">
       
       {/* Top Banner / Logo */}
       <div className="text-center mt-3">
@@ -183,16 +197,18 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
         <div className="grid grid-cols-2 gap-3.5">
           <button
             type="button"
-            onClick={() => onLoginSuccess("Sarah_Apple")}
-            className="py-2 bg-white border border-slate-200 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:bg-slate-50 active:scale-[0.98] transition"
+            disabled={isSubmitting}
+            onClick={() => handleThirdPartyAuth("Apple")}
+            className="py-2 bg-white border border-slate-200 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:bg-slate-50 active:scale-[0.98] transition disabled:opacity-50"
           >
             <span></span>
             <span>Apple</span>
           </button>
           <button
             type="button"
-            onClick={() => onLoginSuccess("Sarah_Google")}
-            className="py-2 bg-white border border-slate-200 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:bg-slate-50 active:scale-[0.98] transition"
+            disabled={isSubmitting}
+            onClick={() => handleThirdPartyAuth("Google")}
+            className="py-2 bg-white border border-slate-200 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:bg-slate-50 active:scale-[0.98] transition disabled:opacity-50"
           >
             <span>G</span>
             <span>Google</span>
