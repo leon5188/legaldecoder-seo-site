@@ -15,6 +15,12 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Third party OAuth popup modals
+  const [showAppleModal, setShowAppleModal] = useState(false);
+  const [showGoogleModal, setShowGoogleModal] = useState(false);
+  const [hideEmail, setHideEmail] = useState(false);
+  const [oAuthLoading, setOAuthLoading] = useState(false);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -43,18 +49,23 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
     }, 1200);
   };
 
-  const handleThirdPartyAuth = (provider: 'Apple' | 'Google') => {
-    setError(null);
-    setIsSubmitting(true);
-    try {
-      setTimeout(() => {
-        setIsSubmitting(false);
-        onLoginSuccess(`User_${provider}`);
-      }, 1000);
-    } catch (err) {
-      setIsSubmitting(false);
-      setError(`Unable to connect to ${provider} Auth Services. Please try again.`);
-    }
+  const handleAppleAuthConfirm = () => {
+    setOAuthLoading(true);
+    setTimeout(() => {
+      setOAuthLoading(false);
+      setShowAppleModal(false);
+      const userDisplayName = hideEmail ? "Apple_Privatized_User" : "Sarah_Jenkins_Apple";
+      onLoginSuccess(userDisplayName);
+    }, 1200);
+  };
+
+  const handleGoogleAuthSelect = (selectedEmail: string) => {
+    setOAuthLoading(true);
+    setTimeout(() => {
+      setOAuthLoading(false);
+      setShowGoogleModal(false);
+      onLoginSuccess(selectedEmail.split('@')[0]);
+    }, 1200);
   };
 
   return (
@@ -198,20 +209,20 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
           <button
             type="button"
             disabled={isSubmitting}
-            onClick={() => handleThirdPartyAuth("Apple")}
-            className="py-2 bg-white border border-slate-200 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:bg-slate-50 active:scale-[0.98] transition disabled:opacity-50"
+            onClick={() => setShowAppleModal(true)}
+            className="py-2 bg-[#1C1C1E] text-white border border-slate-800 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:bg-black active:scale-[0.98] transition disabled:opacity-50"
           >
             <span></span>
-            <span>Apple</span>
+            <span>Sign in with Apple</span>
           </button>
           <button
             type="button"
             disabled={isSubmitting}
-            onClick={() => handleThirdPartyAuth("Google")}
-            className="py-2 bg-white border border-slate-200 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:bg-slate-50 active:scale-[0.98] transition disabled:opacity-50"
+            onClick={() => setShowGoogleModal(true)}
+            className="py-2 bg-white border border-slate-200 text-slate-800 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center space-x-1 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:bg-slate-50 active:scale-[0.98] transition disabled:opacity-50"
           >
-            <span>G</span>
-            <span>Google</span>
+            <span className="text-blue-500">G</span>
+            <span>Google Sign-In</span>
           </button>
         </div>
       </div>
@@ -222,6 +233,138 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
           Locked under TLS 1.3 Bank-Grade Security Protocols.
         </span>
       </div>
+
+      {/* Apple Sign In Official Modal Sheet (AuthenticationServices) */}
+      {showAppleModal && (
+        <div className="absolute inset-0 bg-slate-950/70 z-50 flex flex-col justify-end">
+          <div className="bg-[#1C1C1E] text-white border-t border-slate-800 rounded-t-3xl p-5 space-y-4 animate-in slide-in-from-bottom duration-200 text-left max-w-md mx-auto w-full">
+            <div className="w-9 h-1 bg-slate-700 rounded-full mx-auto" />
+            
+            <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+              <div className="flex items-center space-x-1.5">
+                <span className="text-lg"></span>
+                <span className="text-xs font-black tracking-wider text-slate-200 uppercase">Sign in with Apple</span>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setShowAppleModal(false)}
+                className="text-xs text-blue-500 font-bold hover:text-blue-400"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <div className="flex items-center space-x-3 py-1">
+              <div className="w-10 h-10 rounded-xl bg-[#DF5B30] flex items-center justify-center text-xl text-white shadow-md">
+                🛡️
+              </div>
+              <div>
+                <h4 className="text-xs font-black text-white uppercase">LegalDecoder</h4>
+                <p className="text-[9px] text-slate-400 font-mono font-bold">legaldecoder-app.com</p>
+              </div>
+            </div>
+
+            <div className="space-y-2 border-y border-slate-800 py-3 text-xs font-bold">
+              <div className="flex justify-between text-slate-400">
+                <span>NAME</span>
+                <span className="text-white font-mono">Sarah Jenkins</span>
+              </div>
+              <div className="flex justify-between text-slate-400 items-center">
+                <span>EMAIL</span>
+                <div className="flex items-center space-x-2 text-[10px]">
+                  <button 
+                    type="button"
+                    onClick={() => setHideEmail(false)}
+                    className={`px-2 py-0.5 rounded border ${!hideEmail ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-400'}`}
+                  >
+                    Share My Email
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => setHideEmail(true)}
+                    className={`px-2 py-0.5 rounded border ${hideEmail ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-400'}`}
+                  >
+                    Hide My Email
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              disabled={oAuthLoading}
+              onClick={handleAppleAuthConfirm}
+              className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-black uppercase tracking-wider rounded-xl transition flex items-center justify-center space-x-1.5 shadow-[0_4px_12px_rgba(37,99,235,0.3)] active:scale-[0.98]"
+            >
+              <span>{oAuthLoading ? "Verifying Face ID..." : "Continue with Touch ID / Face ID"}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Google OAuth Account Chooser Modal Sheet */}
+      {showGoogleModal && (
+        <div className="absolute inset-0 bg-slate-950/70 z-50 flex flex-col justify-end">
+          <div className="bg-white text-slate-900 border-t border-slate-200 rounded-t-3xl p-5 space-y-4 animate-in slide-in-from-bottom duration-200 text-left max-w-md mx-auto w-full">
+            <div className="w-9 h-1 bg-slate-300 rounded-full mx-auto" />
+
+            <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+              <div className="flex items-center space-x-1.5">
+                <span className="text-blue-500 font-bold text-lg">G</span>
+                <span className="text-xs font-black tracking-wide text-slate-800 uppercase">Sign in with Google</span>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setShowGoogleModal(false)}
+                className="text-xs text-slate-400 font-bold hover:text-slate-600"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <div className="space-y-1">
+              <h4 className="text-xs font-black text-slate-900 uppercase">Choose an account</h4>
+              <p className="text-[9.5px] text-slate-500 font-bold">to continue to <span className="text-slate-900 font-mono">LegalDecoder</span></p>
+            </div>
+
+            <div className="space-y-2 border-y border-slate-100 py-3">
+              <button
+                type="button"
+                onClick={() => handleGoogleAuthSelect("sarah.jenkins@gmail.com")}
+                className="w-full p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl flex items-center space-x-3 transition text-left active:scale-[0.98]"
+              >
+                <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-black text-xs flex items-center justify-center">
+                  SJ
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h5 className="text-xs font-black text-slate-900 truncate">Sarah Jenkins</h5>
+                  <p className="text-[9px] text-slate-500 truncate font-mono">sarah.jenkins@gmail.com</p>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleGoogleAuthSelect("sarah.work@designstudio.io")}
+                className="w-full p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl flex items-center space-x-3 transition text-left active:scale-[0.98]"
+              >
+                <div className="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center">
+                  SW
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h5 className="text-xs font-black text-slate-900 truncate">Sarah Work</h5>
+                  <p className="text-[9px] text-slate-500 truncate font-mono">sarah.work@designstudio.io</p>
+                </div>
+              </button>
+            </div>
+
+            {oAuthLoading && (
+              <div className="text-center text-[10px] font-mono font-bold text-blue-600 uppercase animate-pulse">
+                Authenticating Google OAuth Token...
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
     </div>
   );

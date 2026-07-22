@@ -38,6 +38,7 @@ export default function WelcomePage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const logged = localStorage.getItem("isLoggedIn") === "true";
+      // Force initial default to false if not explicitly signed in
       setIsLoggedIn(logged);
     }
   }, []);
@@ -47,7 +48,7 @@ export default function WelcomePage() {
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("username", user);
       setIsLoggedIn(true);
-      showToast("✓ Auth Session Established! Secured analysis engine ready");
+      showToast(`✓ Welcome ${user}! Auth Session Secured & Ready`);
     }
   };
 
