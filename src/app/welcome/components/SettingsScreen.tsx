@@ -36,13 +36,6 @@ export default function SettingsScreen({
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Mocked localized Security Logs
-  const securityLogs = [
-    { time: "07:16:21", event: "SYSTEM", msg: "Encrypted memory buffer initialized." },
-    { time: "07:16:32", event: "KEY_ROT", msg: "256-bit TLS local session key rotated." },
-    { time: "07:16:45", event: "SHRED", msg: "Local document queue wiped successfully." }
-  ];
-
   const handleWipeAllCache = () => {
     // Reset all global states to original
     setHasUploaded(false);
@@ -131,23 +124,22 @@ export default function SettingsScreen({
           </span>
         </div>
 
-        {/* Section 3: High Fidelity Security Logs */}
-        <div className="space-y-2 text-left">
-          <span className="text-[8.5px] font-mono font-black text-slate-400 uppercase tracking-widest block">
-            LOCAL SYSTEM SECURITY LOGS
-          </span>
-          <div className="bg-black border border-slate-800 rounded-2xl p-3.5 space-y-2 font-mono text-[8px] text-orange-400 shadow-[0_8px_25px_rgba(0,0,0,0.04)]">
-            {securityLogs.map((log, idx) => (
-              <div key={idx} className="flex space-x-1.5 items-start">
-                <span className="text-slate-500 font-bold">{log.time}</span>
-                <span className="px-1 bg-orange-950/60 text-orange-300 rounded text-[7.5px] font-black">{log.event}</span>
-                <span className="text-slate-350">{log.msg}</span>
-              </div>
-            ))}
-            <div className="flex space-x-1.5 items-start text-orange-500">
-              <span className="text-slate-500 font-bold">CURRENT</span>
-              <span className="px-1 bg-orange-950/60 rounded text-[7.5px] font-black">IDLE</span>
-              <span className="text-slate-455">Listening for core engine operations...</span>
+        {/* Section 3: Data Security & Encryption Status */}
+        <div className="p-3.5 bg-white border border-slate-150/80 rounded-2xl flex flex-col space-y-2.5 text-left shadow-[0_8px_25px_rgba(0,0,0,0.04)]">
+          <div className="flex items-center space-x-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[8.5px] font-mono font-black text-slate-400 uppercase tracking-widest block">
+              SECURITY & ENCRYPTION STATUS
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-2 text-[8.5px] font-mono">
+            <div className="p-2 bg-[#FAF8F5] border border-slate-200 rounded-xl space-y-0.5">
+              <span className="text-emerald-600 font-black block">✓ TLS 1.3 ACTIVE</span>
+              <span className="text-slate-450 text-[7.5px] font-bold">256-bit In-Flight Encryption</span>
+            </div>
+            <div className="p-2 bg-[#FAF8F5] border border-slate-200 rounded-xl space-y-0.5">
+              <span className="text-emerald-600 font-black block">✓ LOCAL VAULT</span>
+              <span className="text-slate-450 text-[7.5px] font-bold">Encrypted On-Device Buffer</span>
             </div>
           </div>
         </div>
