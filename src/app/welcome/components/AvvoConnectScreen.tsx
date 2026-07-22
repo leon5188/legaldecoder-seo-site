@@ -126,12 +126,13 @@ export default function AvvoConnectScreen({
 
               {/* Contact actions */}
               <div className="grid grid-cols-2 gap-2.5 pt-1">
-                <a
-                  href="tel:18005550199"
+                <button
+                  type="button"
+                  onClick={() => handleInquiryTrigger(lawyer.name)}
                   className="py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 rounded-xl text-[9px] font-black tracking-wider uppercase text-center transition active:scale-[0.98] shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
                 >
-                  📞 Direct Call
-                </a>
+                  📞 Phone Consultation
+                </button>
                 <button
                   type="button"
                   onClick={() => handleInquiryTrigger(lawyer.name)}
