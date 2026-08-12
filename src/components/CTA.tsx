@@ -17,7 +17,7 @@ export default function CTA() {
         </div>
         <div className="flex flex-col sm:flex-row lg:flex-col gap-3.5 w-full lg:w-auto shrink-0">
           <a
-            href="https://chrome.google.com/webstore" // Placeholder chrome store link
+            href="https://chrome.google.com/webstore" 
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2.5 px-6 py-4 bg-[#DF5B30] hover:bg-[#c94d25] text-white font-black text-sm uppercase rounded-xl border-2 border-slate-900 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none whitespace-nowrap cursor-pointer"

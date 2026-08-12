@@ -38,11 +38,11 @@ export default function UploadScreen({
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const stepMessages = [
-    "Scanning document layout & extracting text...",
-    "Analyzing semantic nodes for liability traps...",
-    "Cross-referencing state legal compliance guidelines...",
-    "Scoring termination covenants & fee structures...",
-    "Finalizing AI Risk Report & Summary..."
+    "Analyzing document...",
+    "Reviewing contract terms...",
+    "Checking compliance standards...",
+    "Evaluating risk factors...",
+    "Preparing summary..."
   ];
 
   // Loader Countdown Timer & Step Updates
@@ -269,7 +269,7 @@ export default function UploadScreen({
             {/* Bottom Security Note */}
             <div className="border-t border-orange-950/40 pt-3 text-center">
               <p className="text-[8px] text-slate-500 font-bold uppercase tracking-wider">
-                🛡 Secure Audit Pipeline Active • Encrypted In-Memory Processing
+                
               </p>
             </div>
 

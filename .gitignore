@@ -39,3 +39,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+iOS build artifacts
+ios/build/
+ios/App/Podfile.lock
+
+Python
+pycache/
+*.pyc
+path/to/venv/
+
+IDE
+.idea/
+.vscode/
+
+Environment
+.env.local
+.env*.local

@@ -69,12 +69,12 @@ export default function WelcomePage() {
             <span className="text-xl">🛡️</span>
             <div className="text-left">
               <h1 className="text-sm font-black tracking-tight text-slate-900 uppercase">LEGALDECODER</h1>
-              <p className="text-[9px] text-[#DF5B30] font-mono font-black leading-none tracking-widest uppercase">Premium Mobile Preview Console</p>
+              <p className="text-[9px] text-[#DF5B30] font-mono font-black leading-none tracking-widest uppercase">LegalDecoder AI</p>
             </div>
           </div>
           <div className="flex items-center space-x-3.5">
             <span className="text-[9px] font-mono text-slate-400 font-bold uppercase tracking-wider bg-[#FAF8F5] px-3 py-1.5 rounded-full border border-slate-200 shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)]">
-              Environment: iOS / Web simulator
+              iOS App
             </span>
           </div>
         </header>
@@ -239,7 +239,7 @@ export default function WelcomePage() {
 
       {/* Footer */}
       <footer className={`bg-white border-t border-slate-100 py-6 text-center text-slate-400 text-xs ${isNativeApp ? 'hidden' : ''}`}>
-        <p>© 2026 LegalDecoder AI. All rights reserved. For mockup demonstration purposes only.</p>
+        <p>© 2026 LegalDecoder AI. All rights reserved. </p>
       </footer>
     </div>
   );

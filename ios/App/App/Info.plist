@@ -30,7 +30,7 @@
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
+		<string>arm64</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
@@ -47,5 +47,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+    <key>NSCameraUsageDescription</key>
+    <string>LegalDecoder uses the camera to scan paper contracts for AI risk analysis. Photos are processed for text extraction only.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>LegalDecoder accesses your photo library so you can select contract images or scanned documents to analyze.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>LegalDecoder saves analysis reports to your photo library only when you explicitly choose to export them.</string>
 </dict>
 </plist>
